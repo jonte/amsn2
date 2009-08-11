@@ -439,7 +439,9 @@ class aMSNChatHeader(gtk.EventBox):
         # Called when the display picture of the other person is clicked
         if source.dp.get_size_request() == self.dpMini:
             source.dp.set_size_request(self.dpLarge[0],self.dpLarge[1])
+            self.title.set_alignment(xalign = 0, yalign = 0.09)
         else:
             source.dp.set_size_request(self.dpMini[0],self.dpMini[1])
-            print source.dp.get_size_request()
+            self.title.set_alignment(xalign = 0, yalign = 0.5)
+
         self.update(self.cviews)
