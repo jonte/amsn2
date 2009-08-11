@@ -388,6 +388,9 @@ class aMSNChatHeader(gtk.EventBox):
         self.title_color = gtk.gdk.color_parse('#dadada')
         self.psm_color = '#999999'
         self.theme_manager = theme_manager
+        self.dpMini = (50, 50)
+        self.dpLarge = (100, 100)
+        self.cviews = cviews
 
         self.title.set_use_markup(True)
         self.title.set_justify(gtk.JUSTIFY_LEFT)
@@ -405,6 +408,7 @@ class aMSNChatHeader(gtk.EventBox):
         self.modify_bg(gtk.STATE_NORMAL, self.title_color)
         self.add(hbox)
 
+        self.connect("button-release-event", self.__dpClicked)
         self.update(cviews)
 
     def update(self, cviews):
@@ -419,7 +423,8 @@ class aMSNChatHeader(gtk.EventBox):
 
         #FIXME: Which user do we show in a multiconversation?
         img = Image(self.theme_manager, cviews[0].dp)
-        self.dp.set_from_pixbuf(img.to_pixbuf(50,50))
+        size = self.dp.get_size_request()
+        self.dp.set_from_pixbuf(img.to_pixbuf(size[0],size[1]))
 
         title = '<span size="large"><b>%s</b></span>' % (nickname, )
         title += '<span size="medium">  %s</span>' % (status, )
@@ -430,3 +435,11 @@ class aMSNChatHeader(gtk.EventBox):
 
         self.title.set_markup(title)
 
+    def __dpClicked(self, source, event):
+        # Called when the display picture of the other person is clicked
+        if source.dp.get_size_request() == self.dpMini:
+            source.dp.set_size_request(self.dpLarge[0],self.dpLarge[1])
+        else:
+            source.dp.set_size_request(self.dpMini[0],self.dpMini[1])
+            print source.dp.get_size_request()
+        self.update(self.cviews)
